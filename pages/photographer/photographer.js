@@ -1,10 +1,12 @@
+import {photographerFactory} from '../../scripts/factories/photographers.js';
+
 async function getPhotographer(id) {
     const getPhotographer = fetch('../../data/photographers.json')
         .then(response => {
             if (response.ok) {
                 return response.json()
                     .then(data => {
-                            for (valeur of data.photographers) {
+                            for (let valeur of data.photographers) {
                                 if (valeur.id.toString() === id) {
                                     return valeur;
                                 }
@@ -49,16 +51,53 @@ async function getMedia(id) {
 
 async function displayPhotographerData(photographer) {
     const photographHeader = document.querySelector('.photographer-header');
-    const userCardDOM = photographerFactory(photographer, 'detail');
+    const userCardDOM = photographerFactory(photographer, 'detail', null, null, updateLightboxData);
     photographHeader.appendChild(userCardDOM);
-    updateModalData(photographer);
+    updateContactModalData(photographer);
 }
 
-function updateModalData(photographer) {
+function updateContactModalData(photographer) {
+    const photographName = document.querySelector('.photographer-modal-name');
     const photographerName = document.createElement('p');
     photographerName.innerHTML = photographer.name;
-    const photographName = document.querySelector('.photographer-modal-name');
     photographName.appendChild(photographerName);
+}
+
+
+function displayLikesModalData(photographer) {
+    const price = document.getElementById('price');
+    price.innerHTML = photographer.price + '€ / jour';
+
+    let likes = 0;
+    for (let i = 0; i < media.length; i++) {
+        likes += media[i].likes;
+    }
+
+    const likesModal = document.getElementById('likes');
+    likesModal.innerHTML = likes.toString();
+}
+
+let like = [];
+
+function updateLikesModalData(data, index) {
+    const regular_heart = document.querySelectorAll('.fa-regular');
+    const solid_heart = document.querySelectorAll('.fa-solid');
+    const likes = document.querySelectorAll('.like');
+
+    if (like[index]) {
+        regular_heart[index].style.display = 'flex';
+        solid_heart[index].style.display = 'none';
+        likes[index].innerHTML = data.likes - 1;
+        data.likes = data.likes - 1;
+        like[index] = false;
+    } else {
+        regular_heart[index].style.display = 'none';
+        solid_heart[index].style.display = 'flex';
+        likes[index].innerHTML = data.likes + 1;
+        data.likes = data.likes + 1;
+        like[index] = true;
+    }
+    displayLikesModalData(photographer);
 }
 
 async function displayMediaData(media, name) {
@@ -66,20 +105,27 @@ async function displayMediaData(media, name) {
     while (photos.firstChild) {
         photos.removeChild(photos.lastChild);
     }
+    like = new Array(media.length).fill(false)
+    console.log(like);
     media.forEach((photo, index) => {
-        const userPhoto = photographerFactory(photo, 'media', name, index);
+        const userPhoto = photographerFactory(photo, 'media', name, index, updateLightboxData, updateLikesModalData);
         photos.appendChild(userPhoto);
     })
 }
 
-function updateLightboxData(photo, index) {
+function updateLightboxData(index) {
+    const photo = media[index];
     const lightbox = document.querySelector('.lightbox_img');
+    while (lightbox.firstChild) {
+        lightbox.removeChild(lightbox.lastChild);
+    }
     const close = document.querySelector('#close_modal')
     close.focus()
-    const leftArrow = document.createElement('button');
-    leftArrow.className = ' fa-solid fa-angle-left'
-    leftArrow.setAttribute('onClick', `previousPhoto(${index})`)
-    lightbox.appendChild(leftArrow);
+    const leftArrow = document.getElementById('lightbox_left');
+    leftArrow.onclick = () => {
+        if (index === 0) index = media.length;
+        updateLightboxData(index - 1);
+    };
     if (photo.image) {
         const media = document.createElement('img');
         media.setAttribute('src', `../../assets/photos/${photographer.name}/${photo.image}`);
@@ -89,16 +135,18 @@ function updateLightboxData(photo, index) {
         media.setAttribute('src', `../../assets/photos/${photographer.name}/${photo.video}`);
         lightbox.appendChild(media);
     }
-    const rightArrow = document.createElement('button');
-    rightArrow.className = ' fa-solid fa-angle-right'
-    rightArrow.setAttribute('onClick', `nextPhoto(${index})`)
+    const rightArrow = document.getElementById('lightbox_right');
+    rightArrow.onclick = () => {
+        if (index === media.length - 1) index = -1;
+        updateLightboxData(index + 1);
+    };
     const title = document.querySelector('.title')
     title.innerHTML = photo.title;
-    lightbox.appendChild(rightArrow);
 }
 
 async function sort(media) {
     const option = document.querySelectorAll('option')
+    option.forEach(option => option.onclick = updateSort)
 
     function sortPopular(media) {
         return media.sort((value1, value2) => value2.likes - value1.likes);
@@ -146,9 +194,9 @@ async function sort(media) {
     return media;
 }
 
-const id = getPhotographerId();
-let media = [];
+export let media = [];
 let photographer = undefined;
+const id = getPhotographerId();
 
 async function updateSort() {
     media = await sort(media);
@@ -160,6 +208,7 @@ async function init() {
     photographer = await getPhotographer(id);
     media = await getMedia(id);
     await displayPhotographerData(photographer);
+    await displayLikesModalData(photographer)
     await updateSort();
 }
 

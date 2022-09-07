@@ -1,6 +1,7 @@
-function photographerFactory(data, template, path, index) {
-    const {name, portrait, city, country, tagline, price, id} = data;
-    const {title, image, video, likes} = data;
+import {displayLightbox, displayModal} from '../../scripts/utils/forms.js';
+
+export function photographerFactory(data, template, path, index, updateLightboxData, updateLikesModalData) {
+    const {name, portrait, city, country, tagline, price, id, title, image, video, likes} = data;
     const pictures = `../assets/photos/Photographers ID Photos/${portrait}`;
     const photographer = `./photographer/photographer.html?id=${id}`;
 
@@ -39,12 +40,11 @@ function photographerFactory(data, template, path, index) {
     const picture = `../../assets/photos/Photographers ID Photos/${portrait}`;
 
     function getUserCardDOM() {
+        const article = document.querySelector('.photographer-content');
         const button = document.createElement('button');
-        button.className = ' contact_button';
+        button.className = 'contact_button';
         button.innerText = 'Contactez-moi';
-        button.setAttribute('onClick', 'displayModal()');
-        const article = document.createElement('article');
-        article.className = picture
+        button.onclick = displayModal;
         const img = document.createElement('img');
         img.setAttribute('src', picture);
         const div = document.createElement('div')
@@ -57,11 +57,11 @@ function photographerFactory(data, template, path, index) {
         quote.textContent = tagline;
         quote.className = ' quote';
         article.appendChild(div);
+        article.appendChild(button);
+        article.appendChild(img);
         div.appendChild(h1);
         div.appendChild(location);
         div.appendChild(quote);
-        article.appendChild(button);
-        article.appendChild(img);
         return (article);
     }
 
@@ -76,20 +76,25 @@ function photographerFactory(data, template, path, index) {
 
     function getMediaByUser() {
         const button = document.createElement('button');
-        button.setAttribute('onClick', `displayLightbox(${index})`);
+        button.onclick = () => {
+            displayLightbox();
+            updateLightboxData(index);
+        };
         const article = document.createElement('article');
         if (image) {
             const img = document.createElement('img');
             img.setAttribute('src', media);
-            article.appendChild(img);
+            button.appendChild(img);
         }
         if (video) {
             const mp4 = document.createElement('video');
             mp4.setAttribute('src', mp4Path);
-            article.appendChild(mp4);
+            button.appendChild(mp4);
         }
         const content = document.createElement('div');
         const compter = document.createElement('div');
+        const div = document.createElement('div');
+        div.className = ' heart';
         const description = document.createElement('p');
         description.innerHTML = title;
         description.className = ' description';
@@ -97,14 +102,24 @@ function photographerFactory(data, template, path, index) {
         like.innerText = likes;
         like.className = ' like';
         const icon = document.createElement('i');
-        icon.className = ' fa-solid fa-heart';
-        button.appendChild(article);
+        icon.className = ' fa-regular fa-heart';
+        icon.onclick = () => {
+            updateLikesModalData(data, index);
+        };
+        const ico = document.createElement('i')
+        ico.className = ' fa-solid fa-heart'
+        ico.onclick = () => {
+            updateLikesModalData(data, index);
+        };
+        article.appendChild(button);
         article.appendChild(content);
         content.appendChild(description);
         content.appendChild(compter);
         compter.appendChild(like);
-        compter.appendChild(icon);
-        return (button);
+        compter.appendChild(div);
+        div.appendChild(ico);
+        div.appendChild(icon);
+        return (article);
     }
 
     if (template === 'detail') {
@@ -116,6 +131,9 @@ function photographerFactory(data, template, path, index) {
     if (template === 'media') {
         return getMediaByUser();
     }
-    else
+    if (template === 'index') {
         return getUsersCardDOM();
+    } else {
+        console.error('Template suivant incorrect :', template);
+    }
 }
