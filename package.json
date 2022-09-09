@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.18.9",
+    "eslint": "^8.23.0"
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings=0 ."
+  }
+}
