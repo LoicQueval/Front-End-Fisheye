@@ -3,18 +3,18 @@
 @import "../../styles/layouts/header";
 @import "../../styles/layouts/modal";
 @import "../../styles/layouts/lightbox_modal";
+@import "../../styles/layouts/photographer_likes";
 @import "../../styles/components/button";
+@import "../../styles/base/typography";
 
-.photographer-header {
-  background-color: #FAFAFA;
-  height: 300px;
-
+#photographer{
   article {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    height: 100%;
     align-items: center;
     justify-items: center;
+    background-color: #FAFAFA;
+    height: 300px;
 
     div {
       display: flex;
@@ -46,39 +46,7 @@
       height: 200px;
       width: 200px;
       border-radius: 100%;
-      object-fit: cover;
     }
-  }
-}
-
-.toto {
-  position: fixed;
-  bottom: 0;
-  right: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 400px;
-  height: 50px;
-  background-color: $light-red2;
-
-  .likes {
-    display: flex;
-    align-items: center;
-    height: 100%;
-
-    p {
-      padding: 0 10px;
-      font-size: 25px;
-    }
-
-    i {
-      font-size: 20px;
-    }
-  }
-
-  #price {
-    font-size: 28px;
   }
 }
 
@@ -103,7 +71,7 @@ section {
     }
   }
 
-  .photo {
+  #photo {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     margin: 50px 0;
@@ -120,7 +88,6 @@ section {
         img, video {
           width: 500px;
           height: 400px;
-          object-fit: cover;
         }
       }
 

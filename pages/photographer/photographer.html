@@ -13,83 +13,89 @@
         <img src="../../assets/images/logo.png" class="logo" alt="logo fisheye"/>
     </a>
 </header>
-<main id="main">
-    <section class="photographer-header">
-        <article class="photographer-content"></article>
-    </section>
-    <section>
-        <div>
-            <label for="menu">Trier par</label>
+<main aria-label="main content" id="main">
+    <section id="photographer"></section>
+    <section id="media">
+        <div aria-label="sort by area">
+            <label aria-label="sort by" for="menu">Trier par</label>
             <select id="menu">
-                <option class="option">
+                <option aria-label="by popular" class="option">
                     Popularité
                 </option>
-                <option class="option">
+                <option aria-label="by date" class="option">
                     Date
                 </option>
-                <option class="option">
+                <option aria-label="by title" class="option">
                     Titre
                 </option>
             </select>
         </div>
-        <div class="photo"></div>
+        <div id="photo"></div>
     </section>
+
+    <aside>
+        <div>
+            <p id="likes"></p>
+            <i aria-label="heart icon" class="fa-solid fa-heart"></i>
+        </div>
+        <p aria-label="price" id="price"></p>
+    </aside>
+
 </main>
 
-<div id="contact_modal">
-    <div class="modal">
-        <header>
-            <div class="photographer-modal-name">
+<!-- Contact Modal -->
+<section aria-label="contact modal section" id="contact_modal_section">
+    <article aria-label="contact modal" class="contact_modal">
+        <header aria-label="contact modal header">
+            <div>
                 <h2>Contactez-moi</h2>
+                <p id="photographer-modal-name"></p>
             </div>
             <button id="close_modal" aria-label="close modal">
                 <img src="../../assets/icons/close.svg" alt="close_icon"/>
             </button>
         </header>
-        <form name="contact">
-            <div>
+        <form aria-label="contact" name="contact">
+            <div aria-label="first name">
                 <label for="first">Prénom</label>
                 <input type="text" id="first"/>
             </div>
-            <div>
+            <div aria-label="last name">
                 <label for="last">Nom</label>
                 <input type="text" id="last"/>
             </div>
-            <div>
+            <div aria-label="email">
                 <label for="mail">Email</label>
                 <input type="email" id="mail"/>
             </div>
-            <div>
+            <div aria-label="message">
                 <label for="message">Votre message</label>
                 <textarea type="text" id="message"></textarea>
             </div>
-            <button type="button" class="contact_button validate">Envoyer</button>
+            <button type="button" id="validate" class="contact_button">Envoyer</button>
         </form>
-    </div>
-</div>
-<div class="toto">
-    <div class="likes">
-        <p id="likes"></p>
-        <i class="fa-solid fa-heart"></i>
-    </div>
-    <p id="price"></p>
-</div>
+    </article>
+</section>
 
-<div id="lightbox_modal">
-    <div class="lightbox_modal">
-        <div>
-            <header>
-                <button id="close_lightbox" aria-label="close modal">
-                    <img src="../../assets/icons/closeLightbox.svg" alt="close_icon"/>
-                </button>
-            </header>
+
+<!-- Lightbox Modal -->
+<section aria-label="lightbox modal section" id="lightbox_modal_section">
+    <article aria-label="lightbox modal">
+        <header aria-label="header">
+            <button id="close_lightbox" aria-label="close modal">
+                <img src="../../assets/icons/closeLightbox.svg" alt="close_icon"/>
+            </button>
+        </header>
+        <div aria-label="trombinoscope">
             <button id="lightbox_left" class="fa-solid fa-angle-left"></button>
-            <div class="lightbox_img"></div>
+            <div aria-label="lightbox_img" id="lightbox_img"></div>
             <button id="lightbox_right" class="fa-solid fa-angle-right"></button>
         </div>
-        <p class="title"></p>
-    </div>
-</div>
+        <p aria-label="title" id="title"></p>
+    </article>
+</section>
+
 <script src="./photographer.js" type="module"></script>
+
 </body>
 </html>

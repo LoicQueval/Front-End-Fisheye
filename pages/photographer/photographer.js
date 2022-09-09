@@ -1,5 +1,6 @@
 import {photographerFactory} from '../../scripts/factories/photographers.js';
 
+// Récupère les données d'un photographe en particulier
 async function getPhotographer(id) {
     const getPhotographer = fetch('../../data/photographers.json')
         .then(response => {
@@ -22,6 +23,7 @@ async function getPhotographer(id) {
     )
 }
 
+// Récupère l'id du photographe dans l'url
 function getPhotographerId() {
     const url = window.location.href;
     const DOM_url = new URL(url);
@@ -32,6 +34,7 @@ function getPhotographerId() {
     }
 }
 
+// Récupère les images et vidéo en fonction du photographe
 async function getMedia(id) {
     const getMedia = fetch('../../data/photographers.json')
         .then(response => {
@@ -49,21 +52,22 @@ async function getMedia(id) {
     )
 }
 
+// Affiche les données du photographer
 async function displayPhotographerData(photographer) {
-    const photographHeader = document.querySelector('.photographer-header');
+    const photographerProfile = document.getElementById('photographer');
     const userCardDOM = photographerFactory(photographer, 'detail', null, null, updateLightboxData);
-    photographHeader.appendChild(userCardDOM);
+    photographerProfile.appendChild(userCardDOM);
     updateContactModalData(photographer);
 }
 
+// Modifie le nom du modal contact en fonction du photographe
 function updateContactModalData(photographer) {
-    const photographName = document.querySelector('.photographer-modal-name');
-    const photographerName = document.createElement('p');
+    const photographerName = document.getElementById('photographer-modal-name');
+    photographerName.setAttribute('aria-label', photographer.name);
     photographerName.innerHTML = photographer.name;
-    photographName.appendChild(photographerName);
 }
 
-
+// Affiche les likes totals et le prix du photographe
 function displayLikesModalData(photographer) {
     const price = document.getElementById('price');
     price.innerHTML = photographer.price + '€ / jour';
@@ -75,10 +79,12 @@ function displayLikesModalData(photographer) {
 
     const likesModal = document.getElementById('likes');
     likesModal.innerHTML = likes.toString();
+    likesModal.setAttribute('aria-label', photographer.name + ' likes')
 }
 
 let like = [];
 
+// Met à jour les likes
 function updateLikesModalData(data, index) {
     const regular_heart = document.querySelectorAll('.fa-regular');
     const solid_heart = document.querySelectorAll('.fa-solid');
@@ -100,28 +106,30 @@ function updateLikesModalData(data, index) {
     displayLikesModalData(photographer);
 }
 
+// Affiche les medias du photographe
 async function displayMediaData(media, name) {
-    const photos = document.querySelector('.photo');
+    const photos = document.getElementById('photo');
     while (photos.firstChild) {
         photos.removeChild(photos.lastChild);
     }
     like = new Array(media.length).fill(false)
-    console.log(like);
     media.forEach((photo, index) => {
         const userPhoto = photographerFactory(photo, 'media', name, index, updateLightboxData, updateLikesModalData);
         photos.appendChild(userPhoto);
     })
 }
 
+// Met à jour la lightbox modal
 function updateLightboxData(index) {
     const photo = media[index];
-    const lightbox = document.querySelector('.lightbox_img');
+    const lightbox = document.getElementById('lightbox_img');
     while (lightbox.firstChild) {
         lightbox.removeChild(lightbox.lastChild);
     }
-    const close = document.querySelector('#close_modal')
+    const close = document.getElementById('close_modal')
     close.focus()
     const leftArrow = document.getElementById('lightbox_left');
+    leftArrow.setAttribute('aria-label', 'previous');
     leftArrow.onclick = () => {
         if (index === 0) index = media.length;
         updateLightboxData(index - 1);
@@ -129,24 +137,29 @@ function updateLightboxData(index) {
     if (photo.image) {
         const media = document.createElement('img');
         media.setAttribute('src', `../../assets/photos/${photographer.name}/${photo.image}`);
+        media.setAttribute('aria-label', photo.title);
         lightbox.appendChild(media);
     } else {
         const media = document.createElement('video');
         media.setAttribute('src', `../../assets/photos/${photographer.name}/${photo.video}`);
+        media.setAttribute('aria-label', photo.title);
         lightbox.appendChild(media);
     }
     const rightArrow = document.getElementById('lightbox_right');
+    rightArrow.setAttribute('aria-label', 'next')
     rightArrow.onclick = () => {
         if (index === media.length - 1) index = -1;
         updateLightboxData(index + 1);
     };
-    const title = document.querySelector('.title')
+    const title = document.getElementById('title');
     title.innerHTML = photo.title;
 }
 
+// Trie-les medias du photographe par likes/data/titre
 async function sort(media) {
     const option = document.querySelectorAll('option')
     option.forEach(option => option.onclick = updateSort)
+
 
     function sortPopular(media) {
         return media.sort((value1, value2) => value2.likes - value1.likes);
@@ -168,6 +181,7 @@ async function sort(media) {
         })
     }
 
+    // Gère l'affichage des options
     function hideSelected() {
         const option = document.querySelectorAll('option')
         option.forEach(value => {

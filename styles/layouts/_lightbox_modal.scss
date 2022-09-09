@@ -1,10 +1,11 @@
 @import "../abstracts/variables";
+@import "../base/typography";
 
-#lightbox_modal {
+#lightbox_modal_section {
   display: none;
   justify-content: center;
 
-  .lightbox_modal {
+  article {
     position: fixed;
     top: 50px;
     border-radius: 5px;
@@ -50,23 +51,22 @@
         font-size: xxx-large;
       }
 
-      .lightbox_img {
+      #lightbox_img {
         display: flex;
 
         img, video {
           width: 900px;
           height: 700px;
-          object-fit: cover;
         }
       }
     }
+
+    p {
+      color: $dark-red;
+      font-size: x-large;
+      margin: 10px 120px;
+    }
   }
 
-
-  .title {
-    color: $dark-red;
-    font-size: x-large;
-    margin: 10px 130px;
-  }
 }
 
